@@ -1,29 +1,28 @@
 class Solution {
 public:
-    bool canFinish(const vector<int>& piles, int h, int k) {
-        long long hours = 0;
+   bool canFinishInTime(const vector<int>& piles, int h, int k) {
+        long long totalHours = 0;
         for (int pile : piles) {
-            hours += pile / k;
-            if (pile % k != 0) hours++;
-            if (hours > h) return false;
+            // Use integer division for ceiling: (pile + k - 1) / k
+            totalHours += (pile + k - 1) / k;
+            if (totalHours > h) return false; // Early exit if already over
         }
-        return hours <= h;
+        return totalHours <= h;
     }
 
     int minEatingSpeed(vector<int>& piles, int h) {
         int left = 1;
         int right = *max_element(piles.begin(), piles.end());
-        int ans = right;
-
+        int answer = right;
         while (left <= right) {
             int mid = left + (right - left) / 2;
-            if (canFinish(piles, h, mid)) {
-                ans = mid;
+            if (canFinishInTime(piles, h, mid)) {
+                answer = mid;
                 right = mid - 1;
             } else {
                 left = mid + 1;
             }
         }
-        return ans;
+        return answer;
     }
 };
